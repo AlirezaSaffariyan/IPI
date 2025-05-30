@@ -15,12 +15,12 @@ def main():
     text_to_hide = "SECRET"
     output_encoded = "../outputs/encoded.png"
     output_decoded = "../outputs/decoded.png"
-    p = 15  # Stripe period
+    p = 2  # Stripe period
     min_thickness = 1  # Minimum line thickness
     max_thickness = 5  # Maximum line thickness
     strip_width = 5  # Width of each vertical strip
     chunk_height = 5  # Height of each chunk
-    amplitude = 0.1  # Strength of the hidden pattern
+    amplitude = 0.3  # Strength of the hidden pattern
 
     # Load and preprocess the image
     try:

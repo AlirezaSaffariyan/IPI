@@ -1,5 +1,5 @@
-import cv2
 import numpy as np
+import cv2
 
 
 def adjust_brightness(image, min_val=15, max_val=240):
@@ -21,7 +21,7 @@ def map_brightness_to_thickness(
     avg_brightness, min_thickness, max_thickness, min_brightness, max_brightness
 ):
     """
-    Map average brightness to a line thickness, where darker areas produce thicker lines.
+    Map average brightness to a line thickness, where brighter areas produce thicker lines.
 
     Args:
         avg_brightness (float): Average brightness of the chunk.
@@ -33,8 +33,8 @@ def map_brightness_to_thickness(
     Returns:
         int: Calculated line thickness.
     """
-    # Inverse mapping: darker (lower brightness) -> thicker (higher thickness)
-    thickness = max_thickness - (avg_brightness - min_brightness) * (
+    # Linear mapping: brighter (higher brightness) -> thicker (higher thickness)
+    thickness = min_thickness + (avg_brightness - min_brightness) * (
         max_thickness - min_thickness
     ) / (max_brightness - min_brightness)
     return int(np.clip(thickness, min_thickness, max_thickness))

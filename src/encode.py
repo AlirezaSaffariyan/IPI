@@ -58,7 +58,7 @@ def encode_image(
                 continue
             # Compute average brightness
             avg_brightness = np.mean(chunk)
-            # Map to thickness
+            # Map to thickness (brighter = thicker)
             thickness = map_brightness_to_thickness(
                 avg_brightness, min_thickness, max_thickness, 15, 240
             )
