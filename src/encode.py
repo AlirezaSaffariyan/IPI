@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 
 from utils import (
@@ -18,6 +19,12 @@ def encode_image(
     strip_width=10,
     chunk_height=50,
     amplitude=0.1,
+    font=cv2.FONT_HERSHEY_SIMPLEX,
+    font_scale=1,
+    text_angle=0,
+    spacing_x=1.2,
+    spacing_y=1.2,
+    letter_spacing=0,
 ):
     """
     Encode the image into vertical lines with varying thickness per chunk and hide text.
@@ -31,6 +38,12 @@ def encode_image(
         strip_width (int): Width of each vertical strip (default: 10).
         chunk_height (int): Height of each chunk (default: 50).
         amplitude (float): Strength of the stripe pattern (default: 0.1).
+        font (int): OpenCV font type (default: cv2.FONT_HERSHEY_SIMPLEX).
+        font_scale (float): Font size scaling factor (default: 1).
+        text_angle (float): Text rotation angle in degrees (default: 0).
+        spacing_x (float): Horizontal text spacing multiplier (default: 1.2).
+        spacing_y (float): Vertical text spacing multiplier (default: 1.2).
+        letter_spacing (int): Pixel spacing between characters (default: 0).
 
     Returns:
         numpy.ndarray: Encoded image with lines and hidden text.
@@ -43,7 +56,18 @@ def encode_image(
     # Generate key patterns and text image
     K = generate_key_pattern(height, width, p, stripe_type="binary")
     K_shifted = generate_shifted_key(K, p // 2)
-    T_normalized = create_text_image(text_to_hide, height, width)
+    T_normalized = create_text_image(
+        text_to_hide,
+        height,
+        width,
+        font,
+        font_scale,
+        thickness=2,
+        angle=text_angle,
+        spacing_x=spacing_x,
+        spacing_y=spacing_y,
+        letter_spacing=letter_spacing,
+    )
 
     # Create the stripe pattern with hidden text
     E_stripe = K * (1 - T_normalized) + K_shifted * T_normalized

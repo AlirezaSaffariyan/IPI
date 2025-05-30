@@ -25,6 +25,12 @@ def main():
     strip_width = 5  # Width of each vertical strip
     chunk_height = 5  # Height of each chunk
     amplitude = 0.3  # Strength of the hidden pattern
+    font = cv2.FONT_HERSHEY_SIMPLEX  # Font type
+    font_scale = 1  # Font size scaling
+    text_angle = 45  # Text rotation angle in degrees
+    spacing_x = 1.4  # Horizontal text spacing multiplier
+    spacing_y = 0.4  # Vertical text spacing multiplier
+    letter_spacing = 0  # Pixel spacing between characters
 
     # Load and preprocess the image
     try:
@@ -48,6 +54,12 @@ def main():
         strip_width,
         chunk_height,
         amplitude,
+        font,
+        font_scale,
+        text_angle,
+        spacing_x,
+        spacing_y,
+        letter_spacing,
     )
 
     # Decode the image to reveal the text
