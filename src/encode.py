@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+from PIL import Image
+from PIL.PngImagePlugin import PngInfo
 
 from utils import (
     adjust_brightness,
@@ -13,6 +15,7 @@ from utils import (
 def encode_image(
     I,
     text_to_hide,
+    output_path,
     p=10,
     min_thickness=1,
     max_thickness=10,
@@ -25,13 +28,15 @@ def encode_image(
     spacing_x=1.2,
     spacing_y=1.2,
     letter_spacing=0,
+    stripe_type="binary",
 ):
     """
-    Encode the image into vertical lines with varying thickness per chunk and hide text.
+    Encode the image into vertical lines with varying thickness per chunk, hide text, and save with metadata.
 
     Args:
         I (numpy.ndarray): Grayscale input image.
-        text_to_hide (str): Text to hide.
+        text_to_hide (string): Text to hide.
+        output_path (string): Path to save the encoded image.
         p (int): Period of the stripes (default: 10).
         min_thickness (int): Minimum line thickness (default: 1).
         max_thickness (int): Maximum line thickness (default: 10).
@@ -44,9 +49,10 @@ def encode_image(
         spacing_x (float): Horizontal text spacing multiplier (default: 1.2).
         spacing_y (float): Vertical text spacing multiplier (default: 1.2).
         letter_spacing (int): Pixel spacing between characters (default: 0).
+        stripe_type (string): Stripe pattern type ('binary' or 'sinusoidal', default: 'binary').
 
     Returns:
-        numpy.ndarray: Encoded image with lines and hidden text.
+        numpy.ndarray: Encoded image.
     """
     height, width = I.shape
 
@@ -54,7 +60,8 @@ def encode_image(
     I_adjusted = adjust_brightness(I, min_val=15, max_val=240)
 
     # Generate key patterns and text image
-    K = generate_key_pattern(height, width, p, stripe_type="binary")
+    K = generate_key_pattern(height, width, p, stripe_type=stripe_type)
+
     K_shifted = generate_shifted_key(K, p // 2)
     T_normalized = create_text_image(
         text_to_hide,
@@ -93,4 +100,16 @@ def encode_image(
 
     # Blend the line image with the stripe pattern
     E = line_image * (1 - amplitude) + E_stripe * amplitude
-    return np.clip(E, 0, 255).astype(np.uint8)
+    E = np.clip(E, 0, 255).astype(np.uint8)
+
+    # Save the image with metadata using Pillow
+    E_pil = Image.fromarray(E)
+
+    # Create a PngInfo container for metadata
+    png_metadata = PngInfo()
+    png_metadata.add_text("stripe_period", str(p))
+    png_metadata.add_text("stripe_type", stripe_type)
+
+    E_pil.save(output_path, exif=Image.Exif().tobytes(), pnginfo=png_metadata)
+
+    return E

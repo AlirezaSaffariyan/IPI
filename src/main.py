@@ -3,7 +3,6 @@ import cv2
 from decode import decode_image
 from encode import encode_image
 from preprocess import load_and_preprocess_image
-from utils import generate_key_pattern
 
 
 def main():
@@ -31,6 +30,7 @@ def main():
     spacing_x = 1.4  # Horizontal text spacing multiplier
     spacing_y = 0.4  # Vertical text spacing multiplier
     letter_spacing = 0  # Pixel spacing between characters
+    stripe_type = "binary"  # Stripe pattern type
 
     # Load and preprocess the image
     try:
@@ -39,15 +39,11 @@ def main():
         print(e)
         return
 
-    height, width = I.shape
-
-    # Generate key pattern
-    K = generate_key_pattern(height, width, p, stripe_type="binary")
-
-    # Encode the image with hidden text and chunk-based lines
+    # Encode the image with hidden text and save with metadata
     E = encode_image(
         I,
         text_to_hide,
+        output_encoded,
         p,
         min_thickness,
         max_thickness,
@@ -60,16 +56,18 @@ def main():
         spacing_x,
         spacing_y,
         letter_spacing,
+        stripe_type,
     )
 
-    # Decode the image to reveal the text
-    D = decode_image(E, K)
-
-    # Save results
-    cv2.imwrite(output_encoded, E)
-    cv2.imwrite(output_decoded, D)
-    print(f"Encoded image saved to {output_encoded}")
-    print(f"Decoded image saved to {output_decoded}")
+    # Decode the image using the encoded file
+    try:
+        D = decode_image(output_encoded)
+        cv2.imwrite(output_decoded, D)
+        print(f"Encoded image saved to {output_encoded}")
+        print(f"Decoded image saved to {output_decoded}")
+    except ValueError as e:
+        print(e)
+        return
 
 
 if __name__ == "__main__":
