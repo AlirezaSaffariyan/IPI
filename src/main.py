@@ -11,10 +11,14 @@ def main():
     Main function to encode and decode an image with hidden text.
     """
     # Input parameters
-    image_path = "../images/sample.jpg"  # Replace with your image path
+    input_path = "../images/"
+    input_image = "sample.jpg"
+    input_image_name = ".".join(input_image.split(".")[:-1])
+    image_path = f"{input_path}{input_image}"
     text_to_hide = "SECRET"
-    output_encoded = "../outputs/encoded.png"
-    output_decoded = "../outputs/decoded.png"
+    output_path = "../outputs/"
+    output_encoded = f"{output_path}{input_image_name}-encoded.png"
+    output_decoded = f"{output_path}{input_image_name}-decoded.png"
     p = 2  # Stripe period
     min_thickness = 1  # Minimum line thickness
     max_thickness = 5  # Maximum line thickness
