@@ -24,6 +24,7 @@ def encode_image(
     amplitude=0.1,
     font=cv2.FONT_HERSHEY_SIMPLEX,
     font_scale=1,
+    font_thickness=1,
     text_angle=0,
     spacing_x=1.2,
     spacing_y=1.2,
@@ -45,6 +46,7 @@ def encode_image(
         amplitude (float): Strength of the stripe pattern (default: 0.1).
         font (int): OpenCV font type (default: cv2.FONT_HERSHEY_SIMPLEX).
         font_scale (float): Font size scaling factor (default: 1).
+        font_thickness (int): Font thickness (default: 1).
         text_angle (float): Text rotation angle in degrees (default: 0).
         spacing_x (float): Horizontal text spacing multiplier (default: 1.2).
         spacing_y (float): Vertical text spacing multiplier (default: 1.2).
@@ -69,7 +71,7 @@ def encode_image(
         width,
         font,
         font_scale,
-        thickness=2,
+        thickness=font_thickness,
         angle=text_angle,
         spacing_x=spacing_x,
         spacing_y=spacing_y,

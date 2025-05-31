@@ -39,6 +39,7 @@ def encode_main(args):
             amplitude=args.amplitude,
             font=getattr(cv2, args.font),
             font_scale=args.font_scale,
+            font_thickness=args.font_thickness,
             text_angle=args.text_angle,
             spacing_x=args.spacing_x,
             spacing_y=args.spacing_y,
@@ -160,6 +161,12 @@ def main():
         type=float,
         default=1.0,
         help="Font size scaling factor (default: 1.0)",
+    )
+    encode_parser.add_argument(
+        "--font-thickness",
+        type=int,
+        default=1,
+        help="Font thickness (default: 1)",
     )
     encode_parser.add_argument(
         "--text-angle",
